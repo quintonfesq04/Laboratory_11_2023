@@ -1,0 +1,126 @@
+/*
+Name: Quinton Fesq
+Date: November 9 2023
+File: P11
+ 
+Description: write a problem featuring a two-dimensional array that allows someone to reserve seats on a CRJ 200.
+While you may assume correctly formatted input, the program must properly detect and handle cases where
+seats are already reserved or are non-existent
+*/
+
+#include<iostream>
+#define COLUMNS 6
+#define ROWS 13
+#include <ctime>
+#include <iomanip>
+using namespace std;
+
+int findRowIndex(int thisRow);
+int findSeatIndex(char thisSeat);
+char seatLetter(int column);
+void displaySeatColumn(char seats[][ROWS], int column);
+int main() {
+    char seats[COLUMNS][ROWS];
+    int row;
+    char column;
+    int index = 0;
+    for (int i = 0; i < COLUMNS; i++) {
+        for (int j = 0; j < ROWS; j++) {
+            if (i == 2) {
+                if (j > 8) {
+                    seats[i][j] = '1';
+                }
+                else {
+                    seats[i][j] = ' ';
+                }
+            }
+            else if (i == 3) {
+                seats[i][j] = (j + 1) % 10 + 48;
+            }
+            else {
+                seats[i][j] = seatLetter(index);
+            }
+        }
+        if (i != 2 && i != 3) {
+            index++;
+        }
+    }
+    for (int i = 0; i < COLUMNS; i++) {
+        displaySeatColumn(seats, i);
+    }
+    cout << endl;
+    
+    cout << "Enter a seat of Q to quit: ";
+    cin >> row;
+    cin >> column;
+    while (!cin.fail()) {
+        if ((column == 'C' && row == 13) || (column == 'D' && row == 13)
+            || findRowIndex(row) == -1 || findSeatIndex(column) == -1)
+            cout << "Sorry, no such seat exists on the CRJ 200. " << endl;
+        else if ((column == 'D' && row == 13 && column == 'C' && row ==
+            13)) {
+            cout << "Sorry, no such seat exists on the CRJ 200. " << endl
+                << endl;
+        }
+        else if (seats[findSeatIndex(column)][findRowIndex(row)] == 'X') {
+            cout << "Sorry, this seat is already taken. " << endl;
+        }
+        else {
+            seats[findSeatIndex(column)][findRowIndex(row)] = 'X';
+        }
+        for (int i = 0; i < COLUMNS; i++) {
+            displaySeatColumn(seats, i);
+
+        }
+        cout << "Enter a seat of Q to quit: ";
+        cin >> row;
+        cin >> column;
+        cout << endl;
+    }
+}
+int findRowIndex(int thisRow) {
+    if (thisRow > 13 || thisRow < 1)
+        return(-1);
+    else
+        return(thisRow - 1);
+}
+int findSeatIndex(char thisSeat) {
+    if (thisSeat == 'D')
+        return(0);
+    if (thisSeat == 'C')
+        return(1);
+    if (thisSeat == 'B')
+        return(4);
+    if (thisSeat == 'A')
+        return(5);
+    return(-1);
+}
+char seatLetter(int column) {
+    if (column == 0)
+        return('D');
+    if (column == 1)
+        return('C');
+    if (column == 2)
+        return('B');
+    if (column == 3)
+        return('A');
+    
+    return ' ';
+}
+void displaySeatColumn(char seats[][ROWS], int column) {
+    seats[0][ROWS - 1] = ' ';
+    for (int j = 0; j < ROWS; j++) {
+        cout << seats[column][j] << " ";
+    }
+    if (column == 1) {
+        cout << endl;
+    }
+    if (column == 3) {
+        cout << endl;
+    }
+    if (column == 5) {
+        cout << endl;
+    }
+    seats[1][ROWS - 1] = ' ';
+    cout << endl;
+}
